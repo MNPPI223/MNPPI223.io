@@ -7,647 +7,183 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-/* =============================================
-   MNPPI_Develop_Blog — Apple Dark Theme
-   =============================================
-   게시글 추가 방법:
-   1. POSTS_DATA 배열에 객체 하나 추가
-   2. title, date, tag, excerpt, content 작성
-   3. 저장 후 GitHub push — 끝.
-   ============================================= */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg-base:        #000000;
-  --bg-surface:     #0a0a0a;
-  --bg-card:        #111111;
-  --bg-card-hover:  #181818;
-  --bg-nav:         rgba(0,0,0,0.75);
-  --text-primary:   #f5f5f7;
-  --text-secondary: #a1a1a6;
-  --text-muted:     #6e6e73;
-  --accent:         #0071e3;
-  --accent-hover:   #0077ed;
-  --accent-soft:    rgba(0,113,227,0.12);
-  --border:         rgba(255,255,255,0.08);
-  --border-hover:   rgba(255,255,255,0.18);
-  --radius-sm:      10px;
-  --radius-md:      14px;
-  --radius-lg:      20px;
-  --radius-xl:      28px;
-  --nav-h:          52px;
-}
-
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  background: var(--bg-base);
-  color: var(--text-primary);
-  font-family: -apple-system, 'Noto Sans KR', 'Helvetica Neue', sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-}
-
-/* ---- SCROLLBAR ---- */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
-
-/* ======== NAV ======== */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  height: var(--nav-h);
-  background: var(--bg-nav);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 clamp(20px, 6vw, 80px);
-}
-
-.nav-logo {
-  font-family: 'SF Mono', 'Courier New', monospace;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-primary);
-  text-decoration: none;
-  cursor: pointer;
-}
-.nav-logo span { color: var(--accent); }
-
-.nav-links {
-  display: flex;
-  gap: 28px;
-  list-style: none;
-}
-.nav-links a {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  transition: color 0.2s;
-  cursor: pointer;
-}
-.nav-links a:hover { color: var(--text-primary); }
-
-/* ======== PAGES ======== */
-.page { display: none; padding-top: var(--nav-h); }
-.page.active { display: block; }
-
-/* ======== HERO ======== */
-.hero {
-  min-height: calc(100vh - var(--nav-h));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px clamp(20px, 8vw, 120px) 100px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -180px; left: 50%;
-  transform: translateX(-50%);
-  width: 700px; height: 700px;
-  background: radial-gradient(ellipse, rgba(0,113,227,0.13) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 20px;
-}
-
-.hero-title {
-  font-size: clamp(42px, 7vw, 76px);
-  font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: -0.026em;
-  color: var(--text-primary);
-  margin-bottom: 22px;
-}
-
-.hero-title .hl {
-  background: linear-gradient(135deg, #0071e3 20%, #5ac8fa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-sub {
-  font-size: 18px;
-  font-weight: 300;
-  color: var(--text-secondary);
-  max-width: 500px;
-  margin: 0 auto 44px;
-  line-height: 1.75;
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 13px 26px;
-  border-radius: 980px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-}
-.btn-primary:hover { background: var(--accent-hover); transform: scale(1.025); }
-
-/* ======== SECTION WRAPPER ======== */
-.section-wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 90px clamp(20px, 5vw, 60px);
-}
-
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-
-.section-title {
-  font-size: clamp(28px, 4vw, 46px);
-  font-weight: 700;
-  letter-spacing: -0.022em;
-  color: var(--text-primary);
-  margin-bottom: 50px;
-  line-height: 1.08;
-}
-
-.section-divider {
-  height: 0.5px;
-  background: var(--border);
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-/* ======== ABOUT ======== */
-.about-grid {
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 52px;
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 52px;
-  align-items: center;
-}
-
-.about-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
-
-.avatar {
-  width: 96px; height: 96px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #0071e3 0%, #30a8ff 100%);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 34px; font-weight: 700; color: #fff;
-  letter-spacing: -0.02em;
-  flex-shrink: 0;
-}
-
-.about-name {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.github-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 0.5px solid var(--border-hover);
-  border-radius: 980px;
-  padding: 8px 18px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  background: transparent;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.github-btn:hover {
-  border-color: var(--text-secondary);
-  color: var(--text-primary);
-  background: rgba(255,255,255,0.04);
-}
-
-.gh-icon { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
-
-.about-bio {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  margin-bottom: 28px;
-}
-.about-bio strong { color: var(--text-primary); font-weight: 500; }
-
-.tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tech-pill {
-  font-size: 11px;
-  font-weight: 500;
-  font-family: 'SF Mono', 'Courier New', monospace;
-  padding: 5px 13px;
-  border-radius: 980px;
-  border: 0.5px solid var(--border-hover);
-  color: var(--text-secondary);
-  background: transparent;
-  letter-spacing: 0.03em;
-  transition: all 0.2s;
-}
-.tech-pill:hover { border-color: var(--accent); color: var(--accent); }
-
-/* ======== TAGS FILTER ======== */
-.tags-flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 50px;
-}
-.tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: 980px;
-  border: 0.5px solid var(--border);
-  background: var(--bg-card);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-}
-.tag-chip:hover, .tag-chip.active {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-.tag-count {
-  font-size: 10px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 980px;
-  padding: 1px 7px;
-  color: var(--text-muted);
-  transition: all 0.2s;
-}
-.tag-chip.active .tag-count {
-  background: rgba(0,113,227,0.2);
-  color: var(--accent);
-}
-
-/* ======== POSTS GRID ======== */
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 22px;
-}
-
-.post-card {
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  cursor: pointer;
-  transition: background 0.22s, border-color 0.22s, transform 0.2s;
-  display: flex;
-  flex-direction: column;
-}
-.post-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-3px);
-}
-
-/* 썸네일 — 텍스트 기반 */
-.post-thumb {
-  width: 100%;
-  aspect-ratio: 16/9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0a0a0a;
-  border-bottom: 0.5px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-.post-thumb::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 60%, rgba(0,113,227,0.09) 0%, transparent 65%);
-}
-.thumb-inner {
-  position: relative; z-index: 1;
-  text-align: center;
-}
-.thumb-lang {
-  font-family: 'SF Mono', 'Courier New', monospace;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 4px;
-}
-.thumb-sub {
-  font-family: 'SF Mono', 'Courier New', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-}
-
-.post-body {
-  padding: 20px 22px 22px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.post-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.post-tag-badge {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.post-date {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: 'SF Mono', 'Courier New', monospace;
-}
-.post-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.45;
-  margin-bottom: 9px;
-  letter-spacing: -0.01em;
-}
-.post-excerpt {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  flex: 1;
-}
-.post-read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--accent);
-  margin-top: 16px;
-  letter-spacing: 0.01em;
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-}
-.post-read-more:hover { text-decoration: underline; }
-
-/* ======== EMPTY STATE ======== */
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 80px 20px;
-  color: var(--text-muted);
-}
-.empty-state p { font-size: 14px; margin-top: 12px; }
-
-/* ======== POST DETAIL PAGE ======== */
-.post-detail-wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 80px clamp(20px, 5vw, 40px) 120px;
-}
-
-.post-detail-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--accent);
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-  margin-bottom: 48px;
-  transition: gap 0.2s;
-}
-.post-detail-back:hover { gap: 10px; }
-
-.post-detail-tag {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-.post-detail-title {
-  font-size: clamp(26px, 4vw, 42px);
-  font-weight: 700;
-  letter-spacing: -0.022em;
-  line-height: 1.1;
-  margin-bottom: 18px;
-  color: var(--text-primary);
-}
-.post-detail-date {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: 'SF Mono', 'Courier New', monospace;
-  margin-bottom: 48px;
-}
-.post-detail-divider {
-  height: 0.5px;
-  background: var(--border);
-  margin-bottom: 48px;
-}
-.post-detail-content {
-  font-size: 16px;
-  color: var(--text-secondary);
-  line-height: 1.85;
-}
-.post-detail-content h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 44px 0 16px;
-  letter-spacing: -0.015em;
-}
-.post-detail-content h3 {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 32px 0 12px;
-}
-.post-detail-content p { margin-bottom: 20px; }
-.post-detail-content strong { color: var(--text-primary); font-weight: 600; }
-.post-detail-content em { color: var(--accent); font-style: normal; font-weight: 500; }
-.post-detail-content code {
-  font-family: 'SF Mono', 'Courier New', monospace;
-  font-size: 13px;
-  background: rgba(255,255,255,0.07);
-  border: 0.5px solid var(--border-hover);
-  padding: 2px 7px;
-  border-radius: 5px;
-  color: #5ac8fa;
-}
-.post-detail-content pre {
-  background: #0d0d0d;
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  overflow-x: auto;
-  margin: 24px 0;
-}
-.post-detail-content pre code {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  line-height: 1.8;
-  color: #f5f5f7;
-}
-.post-detail-content blockquote {
-  border-left: 2px solid var(--accent);
-  margin: 24px 0;
-  padding: 4px 20px;
-  color: var(--text-secondary);
-  background: var(--accent-soft);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-.post-detail-content ul, .post-detail-content ol {
-  margin: 16px 0 20px 24px;
-}
-.post-detail-content li { margin-bottom: 8px; }
-.post-detail-content a { color: var(--accent); text-decoration: none; }
-.post-detail-content a:hover { text-decoration: underline; }
-
-/* ======== FOOTER ======== */
-footer {
-  border-top: 0.5px solid var(--border);
-  padding: 44px clamp(20px, 5vw, 60px);
-  text-align: center;
-}
-.footer-text {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: 'SF Mono', 'Courier New', monospace;
-  letter-spacing: 0.04em;
-}
-.footer-text span { color: var(--accent); }
-
-/* ======== RESPONSIVE ======== */
-@media (max-width: 768px) {
-  .about-grid { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; }
-  .about-left { flex-direction: row; align-items: center; gap: 16px; }
-  .about-name { font-size: 17px; }
-  .nav-links { gap: 16px; }
-  .nav-links li:nth-child(3) { display: none; }
-  .posts-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 480px) {
-  .nav-links li:nth-child(2) { display: none; }
-  .hero-sub { font-size: 15px; }
-}
-
-/* ======== ANIMATIONS ======== */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.hero-eyebrow { animation: fadeUp 0.6s ease both; animation-delay: 0.05s; }
-.hero-title   { animation: fadeUp 0.6s ease both; animation-delay: 0.15s; }
-.hero-sub     { animation: fadeUp 0.6s ease both; animation-delay: 0.25s; }
-.btn-primary  { animation: fadeUp 0.6s ease both; animation-delay: 0.35s; }
+  --bg-base:#000000;--bg-surface:#0a0a0a;--bg-card:#111111;--bg-card-hover:#181818;
+  --bg-nav:rgba(0,0,0,0.78);--bg-modal:rgba(0,0,0,0.82);
+  --text-primary:#f5f5f7;--text-secondary:#a1a1a6;--text-muted:#6e6e73;
+  --accent:#0071e3;--accent-hover:#0077ed;--accent-soft:rgba(0,113,227,0.12);
+  --green:#34c759;--red:#ff453a;--red-soft:rgba(255,69,58,0.12);
+  --border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.18);
+  --radius-sm:10px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;--nav-h:52px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg-base);color:var(--text-primary);font-family:-apple-system,'Noto Sans KR','Helvetica Neue',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--nav-h);background:var(--bg-nav);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,6vw,80px);}
+.nav-logo{font-family:'SF Mono','Courier New',monospace;font-size:14px;font-weight:600;letter-spacing:0.04em;color:var(--text-primary);text-decoration:none;cursor:pointer;}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none;}
+.nav-links a{font-size:13px;color:var(--text-secondary);text-decoration:none;transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover{color:var(--text-primary);}
+.nav-write-btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:500;padding:7px 16px;border-radius:980px;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;}
+.nav-write-btn:hover{background:var(--accent-hover);transform:scale(1.03);}
+.page{display:none;padding-top:var(--nav-h);}
+.page.active{display:block;}
+.hero{min-height:calc(100vh - var(--nav-h));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px clamp(20px,8vw,120px) 100px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(0,113,227,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+.hero-title{font-size:clamp(42px,7vw,76px);font-weight:700;line-height:1.04;letter-spacing:-0.026em;color:var(--text-primary);margin-bottom:22px;}
+.hero-title .hl{background:linear-gradient(135deg,#0071e3 20%,#5ac8fa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:18px;font-weight:300;color:var(--text-secondary);max-width:500px;margin:0 auto 44px;line-height:1.75;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:500;padding:13px 26px;border-radius:980px;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;}
+.btn-primary:hover{background:var(--accent-hover);transform:scale(1.025);}
+.section-wrap{max-width:1100px;margin:0 auto;padding:90px clamp(20px,5vw,60px);}
+.section-label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.section-title{font-size:clamp(28px,4vw,46px);font-weight:700;letter-spacing:-0.022em;color:var(--text-primary);margin-bottom:50px;line-height:1.08;}
+.section-divider{height:0.5px;background:var(--border);max-width:1100px;margin:0 auto;}
+.about-grid{background:var(--bg-card);border:0.5px solid var(--border);border-radius:var(--radius-xl);padding:52px;display:grid;grid-template-columns:220px 1fr;gap:52px;align-items:center;}
+.about-left{display:flex;flex-direction:column;align-items:center;gap:18px;}
+.avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#0071e3 0%,#30a8ff 100%);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;}
+.about-name{font-size:20px;font-weight:700;}
+.github-btn{display:inline-flex;align-items:center;gap:7px;border:0.5px solid var(--border-hover);border-radius:980px;padding:8px 18px;font-size:12px;font-weight:500;color:var(--text-secondary);text-decoration:none;background:transparent;transition:all 0.2s;}
+.github-btn:hover{border-color:var(--text-secondary);color:var(--text-primary);background:rgba(255,255,255,0.04);}
+.gh-icon{width:15px;height:15px;fill:currentColor;}
+.about-bio{font-size:15px;color:var(--text-secondary);line-height:1.8;margin-bottom:28px;}
+.about-bio strong{color:var(--text-primary);font-weight:500;}
+.tech-stack{display:flex;flex-wrap:wrap;gap:8px;}
+.tech-pill{font-size:11px;font-weight:500;font-family:'SF Mono','Courier New',monospace;padding:5px 13px;border-radius:980px;border:0.5px solid var(--border-hover);color:var(--text-secondary);transition:all 0.2s;}
+.tech-pill:hover{border-color:var(--accent);color:var(--accent);}
+.tags-flex{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:50px;}
+.tag-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:980px;border:0.5px solid var(--border);background:var(--bg-card);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;user-select:none;}
+.tag-chip:hover,.tag-chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.tag-count{font-size:10px;background:rgba(255,255,255,0.08);border-radius:980px;padding:1px 7px;color:var(--text-muted);transition:all 0.2s;}
+.tag-chip.active .tag-count{background:rgba(0,113,227,0.2);color:var(--accent);}
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+.post-card{background:var(--bg-card);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:background 0.22s,border-color 0.22s,transform 0.2s;display:flex;flex-direction:column;}
+.post-card:hover{background:var(--bg-card-hover);border-color:var(--border-hover);transform:translateY(-3px);}
+.post-thumb{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border-bottom:0.5px solid var(--border);position:relative;overflow:hidden;}
+.post-thumb::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(0,113,227,0.08) 0%,transparent 65%);}
+.thumb-inner{position:relative;z-index:1;text-align:center;}
+.thumb-lang{font-family:'SF Mono','Courier New',monospace;font-size:26px;font-weight:700;color:var(--accent);display:block;margin-bottom:4px;}
+.thumb-sub{font-family:'SF Mono','Courier New',monospace;font-size:10px;font-weight:500;letter-spacing:0.07em;color:var(--text-muted);}
+.post-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1;}
+.post-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.post-tag-badge{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);}
+.post-date{font-size:11px;color:var(--text-muted);font-family:'SF Mono','Courier New',monospace;}
+.post-title{font-size:15px;font-weight:600;color:var(--text-primary);line-height:1.45;margin-bottom:9px;}
+.post-excerpt{font-size:13px;color:var(--text-secondary);line-height:1.7;flex:1;}
+.post-read-more{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--accent);margin-top:16px;border:none;background:none;cursor:pointer;padding:0;}
+.loading-state,.empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--text-muted);}
+.loading-spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty-state p{font-size:14px;margin-top:12px;}
+.post-detail-wrap{max-width:760px;margin:0 auto;padding:80px clamp(20px,5vw,40px) 120px;}
+.post-detail-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--accent);cursor:pointer;border:none;background:none;padding:0;margin-bottom:48px;transition:gap 0.2s;}
+.post-detail-back:hover{gap:10px;}
+.post-detail-actions{display:flex;gap:10px;margin-bottom:48px;}
+.btn-edit{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--text-secondary);border:0.5px solid var(--border-hover);background:transparent;padding:7px 16px;border-radius:980px;cursor:pointer;transition:all 0.2s;}
+.btn-edit:hover{color:var(--text-primary);border-color:var(--text-secondary);}
+.btn-delete{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--red);border:0.5px solid rgba(255,69,58,0.3);background:transparent;padding:7px 16px;border-radius:980px;cursor:pointer;transition:all 0.2s;}
+.btn-delete:hover{background:var(--red-soft);}
+.post-detail-tag{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.post-detail-title{font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:-0.022em;line-height:1.1;margin-bottom:18px;}
+.post-detail-date{font-size:12px;color:var(--text-muted);font-family:'SF Mono','Courier New',monospace;margin-bottom:48px;}
+.post-detail-divider{height:0.5px;background:var(--border);margin-bottom:48px;}
+.post-detail-content{font-size:16px;color:var(--text-secondary);line-height:1.85;}
+.post-detail-content h2{font-size:22px;font-weight:700;color:var(--text-primary);margin:44px 0 16px;}
+.post-detail-content h3{font-size:17px;font-weight:600;color:var(--text-primary);margin:32px 0 12px;}
+.post-detail-content p{margin-bottom:20px;}
+.post-detail-content strong{color:var(--text-primary);font-weight:600;}
+.post-detail-content em{color:var(--accent);font-style:normal;font-weight:500;}
+.post-detail-content code{font-family:'SF Mono','Courier New',monospace;font-size:13px;background:rgba(255,255,255,0.07);border:0.5px solid var(--border-hover);padding:2px 7px;border-radius:5px;color:#5ac8fa;}
+.post-detail-content pre{background:#0d0d0d;border:0.5px solid var(--border);border-radius:var(--radius-md);padding:24px;overflow-x:auto;margin:24px 0;}
+.post-detail-content pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.8;color:#f5f5f7;}
+.post-detail-content blockquote{border-left:2px solid var(--accent);margin:24px 0;padding:4px 20px;color:var(--text-secondary);background:var(--accent-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+.post-detail-content ul,.post-detail-content ol{margin:16px 0 20px 24px;}
+.post-detail-content li{margin-bottom:8px;}
+.post-detail-content a{color:var(--accent);text-decoration:none;}
+.post-detail-content a:hover{text-decoration:underline;}
+.post-detail-content hr{border:none;height:0.5px;background:var(--border);margin:40px 0;}
+.write-wrap{max-width:900px;margin:0 auto;padding:60px clamp(20px,5vw,40px) 100px;}
+.write-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:12px;}
+.write-title-h{font-size:24px;font-weight:700;}
+.write-form{display:flex;flex-direction:column;gap:20px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-label{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
+.form-input,.form-textarea{background:var(--bg-card);border:0.5px solid var(--border-hover);border-radius:var(--radius-sm);color:var(--text-primary);font-family:inherit;font-size:15px;padding:12px 16px;transition:border-color 0.2s;outline:none;width:100%;}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-muted);}
+.form-textarea{resize:vertical;min-height:400px;font-family:'SF Mono','Courier New',monospace;font-size:13px;line-height:1.7;}
+.md-help{background:var(--bg-card);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:20px;font-size:12px;color:var(--text-muted);font-family:'SF Mono','Courier New',monospace;line-height:1.9;}
+.md-help strong{color:var(--text-secondary);}
+.write-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.btn-cancel{font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;border:0.5px solid var(--border-hover);padding:10px 22px;border-radius:980px;cursor:pointer;transition:all 0.2s;}
+.btn-cancel:hover{color:var(--text-primary);}
+.btn-publish{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:13px;font-weight:500;padding:10px 24px;border-radius:980px;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;}
+.btn-publish:hover{background:var(--accent-hover);transform:scale(1.02);}
+.btn-publish:disabled{background:var(--text-muted);cursor:not-allowed;transform:none;}
+.token-box{background:var(--bg-card);border:0.5px solid rgba(0,113,227,0.3);border-radius:var(--radius-md);padding:20px 24px;display:flex;flex-direction:column;gap:10px;}
+.token-box-label{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);}
+.token-box-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.token-input-row{display:flex;gap:10px;align-items:center;}
+.token-input{background:var(--bg-surface);border:0.5px solid var(--border-hover);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'SF Mono','Courier New',monospace;font-size:13px;padding:10px 14px;flex:1;outline:none;transition:border-color 0.2s;}
+.token-input:focus{border-color:var(--accent);}
+.token-input::placeholder{color:var(--text-muted);}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg-card);border:0.5px solid var(--border-hover);border-radius:980px;padding:12px 24px;font-size:13px;font-weight:500;color:var(--text-primary);z-index:999;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;opacity:0;backdrop-filter:blur(20px);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{border-color:rgba(52,199,89,0.4);color:var(--green);}
+.toast.error{border-color:rgba(255,69,58,0.4);color:var(--red);}
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--bg-modal);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#1a1a1a;border:0.5px solid var(--border-hover);border-radius:var(--radius-lg);padding:36px;max-width:400px;width:90%;text-align:center;}
+.modal-icon{font-size:36px;margin-bottom:16px;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:10px;}
+.modal-desc{font-size:14px;color:var(--text-secondary);margin-bottom:28px;line-height:1.6;}
+.modal-actions{display:flex;gap:10px;justify-content:center;}
+.btn-modal-cancel{font-size:14px;font-weight:500;color:var(--text-secondary);background:transparent;border:0.5px solid var(--border-hover);padding:11px 24px;border-radius:980px;cursor:pointer;transition:all 0.2s;}
+.btn-modal-cancel:hover{color:var(--text-primary);}
+.btn-modal-delete{font-size:14px;font-weight:500;color:#fff;background:var(--red);border:none;padding:11px 24px;border-radius:980px;cursor:pointer;transition:opacity 0.2s;}
+.btn-modal-delete:hover{opacity:0.85;}
+footer{border-top:0.5px solid var(--border);padding:44px clamp(20px,5vw,60px);text-align:center;}
+.footer-text{font-size:12px;color:var(--text-muted);font-family:'SF Mono','Courier New',monospace;letter-spacing:0.04em;}
+.footer-text span{color:var(--accent);}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;padding:32px 24px;gap:32px;}.about-left{flex-direction:row;align-items:center;gap:16px;}.about-name{font-size:17px;}.nav-links{gap:16px;}.posts-grid{grid-template-columns:1fr;}}
+@media(max-width:480px){.hero-sub{font-size:15px;}.write-wrap{padding:40px 20px 80px;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.hero-eyebrow{animation:fadeUp 0.6s ease both 0.05s;}
+.hero-title{animation:fadeUp 0.6s ease both 0.15s;}
+.hero-sub{animation:fadeUp 0.6s ease both 0.25s;}
+.btn-primary{animation:fadeUp 0.6s ease both 0.35s;}
 </style>
 </head>
 <body>
-
-<!-- =============================================
-     NAV
-============================================= -->
+<script>
+const CONFIG = {
+  GITHUB_OWNER: 'mnppi223',
+  GITHUB_REPO:  'mnppi223.github.io',
+  LABEL:        'blog-post',
+};
+</script>
 <nav>
   <a class="nav-logo" onclick="showPage('home')"><span>//</span> MNPPI</a>
   <ul class="nav-links">
-    <li><a onclick="showPage('home'); scrollToSection('about')">About</a></li>
-    <li><a onclick="showPage('home'); scrollToSection('posts')">Posts</a></li>
-    <li><a onclick="showPage('home'); scrollToSection('tags')">Tags</a></li>
+    <li><a onclick="goHome('about')">About</a></li>
+    <li><a onclick="goHome('posts')">Posts</a></li>
+    <li><a onclick="goHome('tags')">Tags</a></li>
     <li><a href="https://github.com/mnppi223" target="_blank" rel="noopener">GitHub</a></li>
+    <li><button class="nav-write-btn" onclick="showPage('write')">✏ 글 쓰기</button></li>
   </ul>
 </nav>
-
-<!-- =============================================
-     HOME PAGE
-============================================= -->
 <div class="page active" id="page-home">
-
-  <!-- HERO -->
   <section class="hero">
     <p class="hero-eyebrow">Developer Blog</p>
-    <h1 class="hero-title">
-      Why does this<br>
-      <span class="hl">even work?</span>
-    </h1>
-    <p class="hero-sub">
-      Java, MySQL, JDBC 를 공부하면서 만나는 모든 의문들.<br>
-      왜 되는지, 어떻게 되는지 직접 파헤칩니다.
-    </p>
-    <button class="btn-primary" onclick="scrollToSection('posts')">
-      Posts 보러가기 →
-    </button>
+    <h1 class="hero-title">Why does this<br><span class="hl">even work?</span></h1>
+    <p class="hero-sub">Java, MySQL, JDBC 를 공부하면서 만나는 모든 의문들.<br>왜 되는지, 어떻게 되는지 직접 파헤칩니다.</p>
+    <button class="btn-primary" onclick="goHome('posts')">Posts 보러가기 →</button>
   </section>
-
   <div class="section-divider"></div>
-
-  <!-- ABOUT -->
-  <div class="section-wrap" id="about">
+  <div class="section-wrap" id="sec-about">
     <p class="section-label">About Me</p>
     <h2 class="section-title">Who am I</h2>
     <div class="about-grid">
@@ -655,53 +191,35 @@ footer {
         <div class="avatar">M</div>
         <div class="about-name">만삣삐</div>
         <a class="github-btn" href="https://github.com/mnppi223" target="_blank" rel="noopener">
-          <svg class="gh-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
-          </svg>
+          <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
           GitHub 프로필
         </a>
       </div>
       <div>
-        <p class="about-bio">
-          백엔드 개발을 공부 중인 부트캠프 수강생입니다.<br>
-          <strong>"왜 이렇게 되는 거지?"</strong> 라는 질문을 좋아합니다.<br>
-          Java, MySQL, JDBC 를 중심으로 기초부터 단단히 쌓아가는 중.<br>
-          모르는 걸 모른다고 말하고, 알게 된 걸 여기에 기록합니다.
-        </p>
+        <p class="about-bio">백엔드 개발을 공부 중인 부트캠프 수강생입니다.<br><strong>"왜 이렇게 되는 거지?"</strong> 라는 질문을 좋아합니다.<br>Java, MySQL, JDBC 를 중심으로 기초부터 단단히 쌓아가는 중.<br>모르는 걸 모른다고 말하고, 알게 된 걸 여기에 기록합니다.</p>
         <div class="tech-stack">
-          <span class="tech-pill">Java</span>
-          <span class="tech-pill">MySQL</span>
-          <span class="tech-pill">JDBC</span>
-          <span class="tech-pill">MVC Pattern</span>
-          <span class="tech-pill">Git / GitHub</span>
-          <span class="tech-pill">IntelliJ IDEA</span>
+          <span class="tech-pill">Java</span><span class="tech-pill">MySQL</span><span class="tech-pill">JDBC</span><span class="tech-pill">MVC Pattern</span><span class="tech-pill">Git / GitHub</span><span class="tech-pill">IntelliJ IDEA</span>
         </div>
       </div>
     </div>
   </div>
-
   <div class="section-divider"></div>
-
-  <!-- TAGS + POSTS -->
-  <div class="section-wrap" id="posts">
-    <p class="section-label" id="tags">Categories</p>
-    <h2 class="section-title">Posts</h2>
-
-    <!-- TAG FILTER -->
+  <div class="section-wrap" id="sec-posts">
+    <p class="section-label" id="sec-tags">Categories & Posts</p>
+    <h2 class="section-title">Articles</h2>
     <div class="tags-flex" id="tagFilter"></div>
-
-    <!-- POSTS GRID -->
-    <div class="posts-grid" id="postsGrid"></div>
+    <div class="posts-grid" id="postsGrid">
+      <div class="loading-state"><div class="loading-spinner"></div><p style="font-size:13px;color:var(--text-muted)">GitHub에서 글 불러오는 중...</p></div>
+    </div>
   </div>
-
-</div><!-- end page-home -->
-
-<!-- =============================================
-     POST DETAIL PAGE
-============================================= -->
+</div>
 <div class="page" id="page-detail">
   <div class="post-detail-wrap">
     <button class="post-detail-back" onclick="showPage('home')">← 목록으로 돌아가기</button>
+    <div class="post-detail-actions" id="detail-actions" style="display:none">
+      <button class="btn-edit" onclick="editCurrentPost()">✏ 수정</button>
+      <button class="btn-delete" onclick="confirmDelete()">🗑 삭제</button>
+    </div>
     <p class="post-detail-tag" id="detail-tag"></p>
     <h1 class="post-detail-title" id="detail-title"></h1>
     <p class="post-detail-date" id="detail-date"></p>
@@ -709,233 +227,226 @@ footer {
     <div class="post-detail-content" id="detail-content"></div>
   </div>
 </div>
-
-<!-- =============================================
-     FOOTER
-============================================= -->
+<div class="page" id="page-write">
+  <div class="write-wrap">
+    <div class="write-header">
+      <h2 class="write-title-h" id="write-page-title">새 글 작성</h2>
+      <button class="btn-cancel" onclick="cancelWrite()">취소</button>
+    </div>
+    <div class="token-box" style="margin-bottom:28px">
+      <p class="token-box-label">GitHub Token</p>
+      <p class="token-box-desc">글을 저장하려면 GitHub Personal Access Token이 필요합니다.<br>발급: github.com → Settings → Developer settings → Personal access tokens → repo 권한<br><strong style="color:var(--text-secondary)">토큰은 저장되지 않습니다. 창을 닫으면 사라집니다.</strong></p>
+      <div class="token-input-row">
+        <input class="token-input" type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <button class="btn-cancel" onclick="toggleTokenVisibility()" id="token-eye">보기</button>
+      </div>
+    </div>
+    <div class="write-form">
+      <div class="form-group">
+        <label class="form-label">제목</label>
+        <input class="form-input" type="text" id="post-title-input" placeholder="글 제목을 입력하세요">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label class="form-label">카테고리 (태그)</label>
+          <input class="form-input" type="text" id="post-tag-input" placeholder="예: Java, MySQL, JDBC ...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">썸네일 표시 텍스트</label>
+          <input class="form-input" type="text" id="post-thumb-input" placeholder="예: Java, SQL, JDBC ...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">요약 (목록에서 보이는 2~3줄)</label>
+        <input class="form-input" type="text" id="post-excerpt-input" placeholder="짧게 요약해주세요">
+      </div>
+      <div class="form-group">
+        <label class="form-label">본문 (마크다운 지원)</label>
+        <textarea class="form-textarea" id="post-body-input" placeholder="# 제목&#10;&#10;본문을 마크다운으로 작성하세요..."></textarea>
+      </div>
+      <div class="md-help">
+        <strong>마크다운 문법 가이드</strong><br>
+        # 제목1 &nbsp; ## 제목2 &nbsp; ### 제목3<br>
+        **굵게** &nbsp; *기울임* &nbsp; ~~취소선~~<br>
+        `인라인 코드` &nbsp; ```코드블록```<br>
+        - 목록 &nbsp; 1. 번호목록 &nbsp; &gt; 인용<br>
+        [링크텍스트](URL) &nbsp; ---수평선---
+      </div>
+      <div class="write-actions">
+        <button class="btn-publish" id="btn-publish" onclick="publishPost()">🚀 GitHub에 발행</button>
+        <span style="font-size:12px;color:var(--text-muted)">GitHub Issues에 저장됩니다</span>
+      </div>
+    </div>
+  </div>
+</div>
 <footer>
-  <p class="footer-text">
-    © 2026 <span>MNPPI_Develop_Blog</span> — Built with curiosity.
-  </p>
+  <p class="footer-text">© 2026 <span>MNPPI_Develop_Blog</span> — Built with curiosity.</p>
 </footer>
-
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-icon">🗑</div>
+    <p class="modal-title">정말 삭제할까요?</p>
+    <p class="modal-desc">이 글을 삭제하면 GitHub에서 완전히 제거됩니다.<br>이 작업은 되돌릴 수 없습니다.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-modal-delete" onclick="deletePost()">삭제</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 <script>
-/* =============================================
-   ★ 게시글 데이터 — 여기만 수정하면 됨 ★
-   
-   항목 설명:
-   - id       : 고유 번호 (1, 2, 3 ... 순서대로 올리면 됨)
-   - title    : 게시글 제목
-   - date     : 날짜 (YYYY.MM.DD 형식)
-   - tag      : 카테고리 (Java / MySQL / JDBC / MVC / Git / etc.)
-   - thumbLang: 썸네일에 크게 표시될 언어명
-   - thumbSub : 썸네일 작은 글씨
-   - excerpt  : 목록에서 보이는 짧은 요약 (2~3문장)
-   - content  : 본문 HTML (아래 예시 참고)
-   
-   ★ 새 글 추가할 때:
-      1. 이 배열 맨 앞에 객체 복사해서 붙여넣기
-      2. id는 기존 최대값 + 1
-      3. 내용 채우기
-      4. 저장 → push → 끝
-============================================= */
-const POSTS_DATA = [
-  {
-    id: 1,
-    title: "이 블로그를 시작하며 — 왜 이렇게 되는 거지?",
-    date: "2026.03.25",
-    tag: "회고",
-    thumbLang: "BLOG",
-    thumbSub: "Why does this work?",
-    excerpt: "백엔드를 공부하다 보면 코드가 왜 동작하는지 이해 못한 채 그냥 넘어가는 순간들이 생긴다. 그 순간들을 기록하기 위해 이 블로그를 만들었다.",
-    content: `
-      <h2>시작하게 된 이유</h2>
-      <p>
-        부트캠프에서 Java를 배우기 시작한 지 몇 주가 됐다.
-        매일 새로운 개념을 배우고, 코드를 작성하고, 에러를 만나고, 해결한다.
-        그런데 문제가 하나 있다.
-      </p>
-      <p>
-        <strong>왜 동작하는지 모른 채 동작하는 코드가 너무 많다.</strong>
-      </p>
-      <blockquote>
-        "이게 왜 되지? 일단 됐으니까 넘어가자."
-      </blockquote>
-      <p>
-        이 패턴이 반복되면 결국 무너진다.
-        기초가 없으면 나중에 더 복잡한 걸 배울 때 아무것도 이해가 안 된다.
-        그래서 이 블로그를 만들었다.
-      </p>
-
-      <h2>이 블로그의 목적</h2>
-      <p>
-        벨로그나 티스토리처럼 잘 정리된 글을 쓰는 게 목표가 아니다.
-        나 자신을 위한 기록이다.
-      </p>
-      <ul>
-        <li>공부하다 <em>"왜?"</em> 라는 의문이 생긴 것들</li>
-        <li>에러를 만났을 때 원인과 해결 과정</li>
-        <li>오늘 배운 개념을 내 말로 설명해보는 것</li>
-      </ul>
-      <p>
-        잘 설명되어 있는 글이 아니어도 괜찮다.
-        내가 이해한 방식대로 써내려가다 보면, 진짜 이해가 생긴다고 믿는다.
-      </p>
-
-      <h2>현재 공부 중인 것들</h2>
-      <p>지금 이 시점에서 주로 다루고 있는 스택은 이렇다.</p>
-      <pre><code>Language   : Java
-Database   : MySQL
-Connector  : JDBC
-Pattern    : MVC + DAO
-Tool       : IntelliJ IDEA, MySQL Workbench, Git</code></pre>
-      <p>
-        팀 프로젝트로 콘솔 기반 LMS 플랫폼을 만들고 있다.
-        프론트엔드 없이 순수 Java 콘솔로 동작하는 백엔드 시스템.
-        작지만 구조를 제대로 잡는 연습을 하고 있다.
-      </p>
-
-      <h2>앞으로 쓸 글들</h2>
-      <p>당장 쓰고 싶은 주제들:</p>
-      <ul>
-        <li><code>PreparedStatement</code> vs <code>Statement</code> — 뭐가 다른가</li>
-        <li>MVC 패턴 — 왜 파일을 이렇게 나누는가</li>
-        <li>MySQL <code>JOIN</code> — 집합으로 이해하기</li>
-        <li><code>NullPointerException</code> — 근본 원인과 방어 패턴</li>
-      </ul>
-      <p>
-        천천히, 하나씩. 이해한 것만 올린다.
-      </p>
-    `
+let allPosts=[],currentTag='all',currentPost=null,isEditMode=false,editIssueNumber=null;
+const API=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/issues`;
+function getToken(){return document.getElementById('gh-token').value.trim();}
+function authHeaders(t){return{'Authorization':`token ${t}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};}
+async function fetchPosts(){
+  try{
+    const res=await fetch(`${API}?labels=${CONFIG.LABEL}&state=open&per_page=100`,{headers:{'Accept':'application/vnd.github.v3+json'}});
+    if(!res.ok)throw new Error();
+    const issues=await res.json();
+    allPosts=issues.map(parseIssue).filter(Boolean);
+    renderTags();renderPosts();
+  }catch(e){
+    document.getElementById('postsGrid').innerHTML='<div class="empty-state"><p>글을 불러오지 못했습니다.<br>GitHub 레포 설정을 확인해주세요.</p></div>';
   }
-
-  /*
-  ★ 새 글은 여기 위에 추가. 예시:
-
-  ,{
-    id: 2,
-    title: "PreparedStatement vs Statement — 뭐가 다른가",
-    date: "2026.03.27",
-    tag: "JDBC",
-    thumbLang: "JDBC",
-    thumbSub: "PreparedStatement",
-    excerpt: "Statement 쓰다가 PreparedStatement 써보니까 차이가 느껴졌다. SQL 인젝션부터 성능까지 정리.",
-    content: `
-      <h2>제목</h2>
-      <p>본문 내용...</p>
-      <pre><code>// 코드 예시</code></pre>
-    `
-  }
-  */
-];
-
-/* =============================================
-   CORE ENGINE — 건드리지 말 것
-============================================= */
-
-let currentTag = 'all';
-
-function getAllTags() {
-  const counts = { all: POSTS_DATA.length };
-  POSTS_DATA.forEach(p => {
-    counts[p.tag] = (counts[p.tag] || 0) + 1;
-  });
-  return counts;
 }
-
-function renderTags() {
-  const counts = getAllTags();
-  const container = document.getElementById('tagFilter');
-  container.innerHTML = '';
-  const allChip = makeTagChip('all', counts.all, currentTag === 'all');
-  container.appendChild(allChip);
-  Object.keys(counts).filter(k => k !== 'all').forEach(tag => {
-    container.appendChild(makeTagChip(tag, counts[tag], currentTag === tag));
+function parseIssue(issue){
+  try{
+    const body=issue.body||'';
+    const metaMatch=body.match(/<!--META:(.*?)-->/s);
+    let tag='기타',thumb='',excerpt='';
+    if(metaMatch){
+      const meta=metaMatch[1];
+      const get=(k)=>{const m=meta.match(new RegExp(k+'=([^|\\n]+)'));return m?m[1].trim():'';};
+      tag=get('tag')||'기타';thumb=get('thumb')||tag;excerpt=get('excerpt')||'';
+    }
+    const content=body.replace(/<!--META:.*?-->\n?/s,'').trim();
+    const date=new Date(issue.created_at).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\. /g,'.').replace('.','');
+    return{id:issue.number,title:issue.title,date,tag,thumb:thumb||tag,excerpt:excerpt||content.slice(0,80).replace(/#+ /g,'')+'...',content,issueNumber:issue.number};
+  }catch{return null;}
+}
+function mdToHtml(md){
+  if(!md)return'';
+  let h=md.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```([\s\S]*?)```/g,(_,c)=>`<pre><code>${c.trim()}</code></pre>`)
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^---$/gm,'<hr>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/~~(.+?)~~/g,'<del>$1</del>')
+    .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>').replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/\n\n/g,'</p><p>');
+  h=h.replace(/(<li>.*<\/li>(\n<li>.*<\/li>)*)/g,'<ul>$1</ul>');
+  return'<p>'+h+'</p>';
+}
+function renderTags(){
+  const counts={all:allPosts.length};
+  allPosts.forEach(p=>{counts[p.tag]=(counts[p.tag]||0)+1;});
+  const container=document.getElementById('tagFilter');container.innerHTML='';
+  [['all',counts.all],...Object.entries(counts).filter(([k])=>k!=='all')].forEach(([tag,count])=>{
+    const el=document.createElement('span');
+    el.className='tag-chip'+(currentTag===tag?' active':'');
+    el.innerHTML=`${tag} <span class="tag-count">${count}</span>`;
+    el.onclick=()=>{currentTag=tag;renderTags();renderPosts();};
+    container.appendChild(el);
   });
 }
-
-function makeTagChip(tag, count, active) {
-  const el = document.createElement('span');
-  el.className = 'tag-chip' + (active ? ' active' : '');
-  el.innerHTML = `${tag} <span class="tag-count">${count}</span>`;
-  el.onclick = () => { currentTag = tag; renderTags(); renderPosts(); };
-  return el;
+function renderPosts(){
+  const grid=document.getElementById('postsGrid');grid.innerHTML='';
+  const filtered=currentTag==='all'?allPosts:allPosts.filter(p=>p.tag===currentTag);
+  if(!filtered.length){grid.innerHTML='<div class="empty-state"><p>아직 게시글이 없습니다.<br>첫 글을 작성해보세요!</p></div>';return;}
+  filtered.forEach(post=>grid.appendChild(makeCard(post)));
 }
-
-function renderPosts() {
-  const grid = document.getElementById('postsGrid');
-  grid.innerHTML = '';
-  const filtered = currentTag === 'all'
-    ? POSTS_DATA
-    : POSTS_DATA.filter(p => p.tag === currentTag);
-
-  if (filtered.length === 0) {
-    const empty = document.createElement('div');
-    empty.className = 'empty-state';
-    empty.innerHTML = '<span style="font-size:32px;opacity:.3">📂</span><p>해당 카테고리에 아직 게시글이 없습니다.</p>';
-    grid.appendChild(empty);
-    return;
-  }
-
-  // 최신순 정렬
-  const sorted = [...filtered].sort((a, b) => b.id - a.id);
-  sorted.forEach(post => grid.appendChild(makePostCard(post)));
+function makeCard(post){
+  const card=document.createElement('div');card.className='post-card';
+  card.innerHTML=`<div class="post-thumb"><div class="thumb-inner"><span class="thumb-lang">${escHtml(post.thumb)}</span><span class="thumb-sub">${escHtml(post.title.slice(0,24))}</span></div></div><div class="post-body"><div class="post-meta"><span class="post-tag-badge">${escHtml(post.tag)}</span><span class="post-date">${escHtml(post.date)}</span></div><p class="post-title">${escHtml(post.title)}</p><p class="post-excerpt">${escHtml(post.excerpt)}</p><button class="post-read-more">Read more →</button></div>`;
+  card.onclick=()=>openPost(post);return card;
 }
-
-function makePostCard(post) {
-  const card = document.createElement('div');
-  card.className = 'post-card';
-  card.innerHTML = `
-    <div class="post-thumb">
-      <div class="thumb-inner">
-        <span class="thumb-lang">${post.thumbLang}</span>
-        <span class="thumb-sub">${post.thumbSub}</span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-meta">
-        <span class="post-tag-badge">${post.tag}</span>
-        <span class="post-date">${post.date}</span>
-      </div>
-      <p class="post-title">${post.title}</p>
-      <p class="post-excerpt">${post.excerpt}</p>
-      <button class="post-read-more" onclick="openPost(${post.id})">Read more →</button>
-    </div>
-  `;
-  card.onclick = (e) => {
-    if (!e.target.classList.contains('post-read-more')) openPost(post.id);
-  };
-  return card;
+function openPost(post){
+  currentPost=post;
+  document.getElementById('detail-tag').textContent=post.tag;
+  document.getElementById('detail-title').textContent=post.title;
+  document.getElementById('detail-date').textContent=post.date;
+  document.getElementById('detail-content').innerHTML=mdToHtml(post.content);
+  document.getElementById('detail-actions').style.display=getToken()?'flex':'none';
+  showPage('detail');window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function openPost(id) {
-  const post = POSTS_DATA.find(p => p.id === id);
-  if (!post) return;
-  document.getElementById('detail-tag').textContent = post.tag;
-  document.getElementById('detail-title').textContent = post.title;
-  document.getElementById('detail-date').textContent = post.date;
-  document.getElementById('detail-content').innerHTML = post.content;
-  showPage('detail');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function cancelWrite(){isEditMode=false;editIssueNumber=null;clearWriteForm();showPage('home');}
+function clearWriteForm(){
+  ['post-title-input','post-tag-input','post-thumb-input','post-excerpt-input','post-body-input'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('write-page-title').textContent='새 글 작성';
+  document.getElementById('btn-publish').textContent='🚀 GitHub에 발행';
 }
-
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  if (name === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
+function editCurrentPost(){
+  if(!currentPost)return;
+  isEditMode=true;editIssueNumber=currentPost.issueNumber;
+  document.getElementById('post-title-input').value=currentPost.title;
+  document.getElementById('post-tag-input').value=currentPost.tag;
+  document.getElementById('post-thumb-input').value=currentPost.thumb;
+  document.getElementById('post-excerpt-input').value=currentPost.excerpt.replace(/\.\.\.$/,'');
+  document.getElementById('post-body-input').value=currentPost.content;
+  document.getElementById('write-page-title').textContent='글 수정';
+  document.getElementById('btn-publish').textContent='💾 수정 저장';
+  showPage('write');window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function scrollToSection(id) {
-  setTimeout(() => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
+async function publishPost(){
+  const token=getToken();
+  if(!token){showToast('GitHub Token을 입력해주세요.','error');return;}
+  const title=document.getElementById('post-title-input').value.trim();
+  const tag=document.getElementById('post-tag-input').value.trim()||'기타';
+  const thumb=document.getElementById('post-thumb-input').value.trim()||tag;
+  const excerpt=document.getElementById('post-excerpt-input').value.trim();
+  const body=document.getElementById('post-body-input').value.trim();
+  if(!title){showToast('제목을 입력해주세요.','error');return;}
+  if(!body){showToast('본문을 입력해주세요.','error');return;}
+  const btn=document.getElementById('btn-publish');btn.disabled=true;btn.textContent='저장 중...';
+  const fullBody=`<!--META:tag=${tag}|thumb=${thumb}|excerpt=${excerpt}-->\n${body}`;
+  try{
+    await ensureLabel(token);
+    let res;
+    if(isEditMode&&editIssueNumber){
+      res=await fetch(`${API}/${editIssueNumber}`,{method:'PATCH',headers:authHeaders(token),body:JSON.stringify({title,body:fullBody})});
+    }else{
+      res=await fetch(API,{method:'POST',headers:authHeaders(token),body:JSON.stringify({title,body:fullBody,labels:[CONFIG.LABEL]})});
+    }
+    if(res.status===401){showToast('토큰이 올바르지 않습니다.','error');return;}
+    if(!res.ok)throw new Error('API error '+res.status);
+    showToast(isEditMode?'글이 수정됐습니다!':'글이 발행됐습니다!','success');
+    isEditMode=false;editIssueNumber=null;clearWriteForm();showPage('home');await fetchPosts();
+  }catch(e){showToast('저장 실패: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent=isEditMode?'💾 수정 저장':'🚀 GitHub에 발행';}
 }
-
-// 초기 렌더링
-renderTags();
-renderPosts();
+async function ensureLabel(token){
+  try{
+    const check=await fetch(`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/labels/${CONFIG.LABEL}`,{headers:authHeaders(token)});
+    if(check.status===404){await fetch(`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/labels`,{method:'POST',headers:authHeaders(token),body:JSON.stringify({name:CONFIG.LABEL,color:'0071e3',description:'Blog post'})});}
+  }catch{}
+}
+function confirmDelete(){document.getElementById('deleteModal').classList.add('open');}
+function closeModal(){document.getElementById('deleteModal').classList.remove('open');}
+async function deletePost(){
+  const token=getToken();
+  if(!token){showToast('GitHub Token을 입력해주세요.','error');closeModal();return;}
+  if(!currentPost)return;closeModal();
+  try{
+    const res=await fetch(`${API}/${currentPost.issueNumber}`,{method:'PATCH',headers:authHeaders(token),body:JSON.stringify({state:'closed'})});
+    if(!res.ok)throw new Error();
+    showToast('글이 삭제됐습니다.','success');currentPost=null;showPage('home');await fetchPosts();
+  }catch{showToast('삭제 실패. 토큰을 확인해주세요.','error');}
+}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');}
+function goHome(id){showPage('home');setTimeout(()=>{const el=document.getElementById('sec-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},50);}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(t._timer);t._timer=setTimeout(()=>{t.classList.remove('show');},3000);
+}
+function toggleTokenVisibility(){
+  const inp=document.getElementById('gh-token'),btn=document.getElementById('token-eye');
+  if(inp.type==='password'){inp.type='text';btn.textContent='숨기기';}else{inp.type='password';btn.textContent='보기';}
+}
+function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+fetchPosts();
 </script>
-
 </body>
 </html>
